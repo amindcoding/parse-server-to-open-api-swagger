@@ -2,7 +2,43 @@ const Parse = require("parse/node");
 const yaml = require("js-yaml");
 const fs = require("fs");
 const path = require("path");
-const { mapParseTypeToOpenAPI } = require("./utils");
+
+const mapParseTypeToOpenAPI = (parseType) => {
+  // Normalisasi input ke string agar aman
+  const typeStr = String(parseType);
+
+  const mapping = {
+    String: { type: "string" },
+    Number: { type: "number" },
+    Boolean: { type: "boolean" },
+    Date: { type: "string", format: "date-time" },
+    Object: { type: "object" },
+    Array: { type: "array", items: { type: "string" } }, // Generic array
+    File: { type: "string", format: "binary" },
+    Pointer: { type: "string", description: "Pointer ID to another class" },
+    Relation: {
+      type: "array",
+      items: { type: "object" },
+      description: "Relation to other objects",
+    },
+    GeoPoint: {
+      type: "object",
+      properties: {
+        latitude: { type: "number" },
+        longitude: { type: "number" },
+      },
+    },
+    Polygon: { type: "object" },
+    Bytes: { type: "string", format: "byte" },
+  };
+
+  return (
+    mapping[typeStr] || {
+      type: "string",
+      description: `Unknown type: ${typeStr}`,
+    }
+  );
+};
 
 class SwaggerGenerator {
   constructor(config) {
