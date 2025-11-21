@@ -2,6 +2,7 @@ const Parse = require("parse/node");
 const yaml = require("js-yaml");
 const fs = require("fs");
 const path = require("path");
+const { mapParseTypeToOpenAPI } = require("./utils");
 
 class SwaggerGenerator {
   constructor(config) {
@@ -67,11 +68,123 @@ class SwaggerGenerator {
         // --- The logic of generating Schema & Path is the same as before ---
         // (Shortened for code brevity, property mapping logic is here)
         // ...
+        // A. Bangun Component Schema (Model)
+        const properties = {
+          objectId: { type: "string" },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        };
+
+        Object.keys(schema.fields).forEach((field) => {
+          properties[field] = mapParseTypeToOpenAPI(schema.fields[field].type);
+        });
 
         // Example placeholder for valid code
         swaggerDoc.components.schemas[className] = {
           type: "object",
           properties: {},
+        };
+
+        // B. Bangun Paths (CRUD Operations)
+        const path = `/classes/${className}`;
+        const pathById = `/classes/${className}/{objectId}`;
+
+        swaggerDoc.paths[path] = {
+          get: {
+            tags: [className],
+            summary: `Get list of ${className}`,
+            parameters: [
+              {
+                name: "where",
+                in: "query",
+                schema: { type: "string" },
+                description: "JSON encoded query",
+              },
+              { name: "limit", in: "query", schema: { type: "integer" } },
+              { name: "skip", in: "query", schema: { type: "integer" } },
+            ],
+            responses: {
+              200: {
+                description: "Successful response",
+                content: {
+                  "application/json": {
+                    schema: {
+                      type: "object",
+                      properties: {
+                        results: {
+                          type: "array",
+                          items: { $ref: `#/components/schemas/${className}` },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          // POST (Create)
+          post: {
+            tags: [className],
+            summary: `Create ${className}`,
+            requestBody: {
+              content: {
+                "application/json": {
+                  schema: { $ref: `#/components/schemas/${className}` },
+                },
+              },
+            },
+            responses: { 201: { description: "Created" } },
+          },
+        };
+
+        // GET (By ID), PUT, DELETE
+        swaggerDoc.paths[pathById] = {
+          get: {
+            tags: [className],
+            summary: `Get ${className} by ID`,
+            parameters: [
+              {
+                name: "objectId",
+                in: "path",
+                required: true,
+                schema: { type: "string" },
+              },
+            ],
+            responses: { 200: { description: "Success" } },
+          },
+          put: {
+            tags: [className],
+            summary: `Update ${className}`,
+            parameters: [
+              {
+                name: "objectId",
+                in: "path",
+                required: true,
+                schema: { type: "string" },
+              },
+            ],
+            requestBody: {
+              content: {
+                "application/json": {
+                  schema: { $ref: `#/components/schemas/${className}` },
+                },
+              },
+            },
+            responses: { 200: { description: "Updated" } },
+          },
+          delete: {
+            tags: [className],
+            summary: `Delete ${className}`,
+            parameters: [
+              {
+                name: "objectId",
+                in: "path",
+                required: true,
+                schema: { type: "string" },
+              },
+            ],
+            responses: { 200: { description: "Deleted" } },
+          },
         };
       });
 
