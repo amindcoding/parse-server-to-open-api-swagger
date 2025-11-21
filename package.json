@@ -1,6 +1,6 @@
 {
   "name": "parse-server-to-open-api-swagger",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Generate OpenAPI 3.0 (Swagger) documentation from Parse Server Schema automatically.",
   "main": "index.js",
   "bin": {
