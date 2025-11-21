@@ -1,4 +1,4 @@
-const mapParseTypeToOpenAPI = (parseType) => {
+export const mapParseTypeToOpenAPI = (parseType) => {
   const mapping = {
     String: { type: "string" },
     Number: { type: "number" },
