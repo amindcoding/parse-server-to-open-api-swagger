@@ -1,0 +1,30 @@
+{
+  "name": "parse-server-to-open-api-swagger",
+  "version": "1.0.4",
+  "description": "Generate OpenAPI 3.0 (Swagger) documentation from Parse Server Schema automatically.",
+  "main": "index.js",
+  "bin": {
+    "parse-swagger": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "parse-server",
+    "swagger",
+    "openapi",
+    "documentation",
+    "generator"
+  ],
+  "author": "amindcoding",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amindcoding/parse-server-to-open-api-swagger/issues"
+  },
+  "dependencies": {
+    "commander": "^14.0.2",
+    "dotenv": "^17.2.3",
+    "js-yaml": "^4.1.1",
+    "parse": "^7.0.2"
+  }
+}
