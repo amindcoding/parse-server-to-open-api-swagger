@@ -13,4 +13,4 @@ Schema Introspection Parse Server to Swagger Open API
 3. open terminal, run -> npm run generate:docs -- --server-url `{URL_OF_PARSE_API}` --app-id "PROD_ID" --master-key "PROD_MASTER_KEY"
 note: required to add server url, app id, and master key
 
-***example: URL_OF_PARSE_API='https://myparseapi.com/parse' ***
+***example: URL_OF_PARSE_API='https://myparseapi.com/parse'***
