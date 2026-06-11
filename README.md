@@ -1,7 +1,5 @@
 # parse-server-to-open-api-swagger
 Schema Introspection Parse Server to Swagger Open API
-# parse-server-to-open-api-swagger
-Schema Introspection Parse Server to Swagger Open API
 
 ## Installation
 1. npm i -D parse-server-to-open-api-swagger
